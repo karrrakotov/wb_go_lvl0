@@ -1,0 +1,12 @@
+PostgreSQL:
+  username: "postgres"
+  host: "db"
+  port: "5432"
+  dbname: "postgres"
+  password: "qwerty"
+  sslmode: "disable"
+
+Nats:
+  URL: "localhost:4222"
+  ClusterID: microservice
+  ClientID: microservice_a

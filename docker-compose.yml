@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  wildberries:
+    build: 
+      dockerfile: Dockerfile
+    command: ./main
+    ports:
+      - 80:1234
+    depends_on:
+      - db
+      - nats-streaming
+    environment:
+      - DB_PASSWORD=qwerty
+      - NATS_CLIENT_ID=microservice_a
+      - CLUSTER_ID=microservice
+    env_file:
+      - .env
+    
+
+  db:
+    restart: always
+    image: postgres:latest
+    volumes:
+      - /data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=qwerty
+    ports:
+      - 5436:5432
+
+  
+  nats-streaming:
+    container_name: nats-streaming
+    image: nats-streaming:latest
+    ports:
+      - "8222:8222"
+      - "4222:4222"
+      - "6222:6222"
+    restart: always
+
+    command: [
+        '-p',
+        '4222',
+        '-m',
+        '8222',
+        '-hbi',
+        '5s',
+        '-hbt',
+        '5s',
+        '-hbf',
+        '2',
+        '-SD',
+        '-cid',
+        'microservice',
+    ]
+
+
